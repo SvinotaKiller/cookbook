@@ -15,7 +15,7 @@ def create_catalog():
 
         if not check_file_in_Catalogs(title):
             now = datetime.datetime.now()
-            date_string = now.strftime("%d-%m-%Y")
+            date_string = now.strftime("%d.%m.%Y")
 
             #Определяет где находится main.py; находит путь к папке Catalogs; создает полный путь к файлу внутри Catalogs
             current_dir = os.path.dirname(os.path.abspath(__file__))
