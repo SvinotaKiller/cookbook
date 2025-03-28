@@ -32,7 +32,7 @@ def create_catalog():
 
             break
         else:
-            print(f"Каталог с названием {title} уже существует, попробуйте ещё раз.")
+            print(f"Каталог с названием «{title}» уже существует, попробуйте ещё раз.")
 
 #Удаление каталога пользователем
 def remove_catalog():
@@ -62,4 +62,3 @@ def remove_catalog():
             print(f"Каталог с названием «{title}» не найден.")
 
 create_catalog()
-remove_catalog()
