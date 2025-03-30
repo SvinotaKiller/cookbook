@@ -61,4 +61,19 @@ def remove_catalog():
         else:
             print(f"Каталог с названием «{title}» не найден.")
 
-create_catalog()
+#Получение списка всех каталогов
+def list_of_all_catalogs():
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    catalogs_path = os.path.join(current_dir, "Catalogs")
+    files = os.listdir(catalogs_path)
+
+    #Фильтрует список, оставляя только файлы с расширением .txt"
+    all_catalogs = [
+        filename[:-4] #Удаляет расширение .txt
+        for filename in files
+        if filename.endswith(".txt")
+    ]
+
+    print("Список всех каталогов: " + ", ".join(all_catalogs), end=".")
+    
+list_of_all_catalogs()
