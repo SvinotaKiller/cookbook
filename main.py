@@ -18,7 +18,7 @@ def create_catalog():
             now = datetime.datetime.now()
             date_string = now.strftime("%d.%m.%Y")
 
-            #Определяет где находится main.py; находит путь к папке Catalogs; создает полный путь к файлу внутри Catalogs
+            #Определяет где находится main.py; находит путь к папке Catalogs; создает полный путь к файлу из папки Catalogs
             current_dir = os.path.dirname(os.path.abspath(__file__))
             catalogs_path = os.path.join(current_dir, "Catalogs")
             filepath = os.path.join(catalogs_path, f"{title}.txt")
@@ -75,5 +75,42 @@ def list_of_all_catalogs():
     ]
 
     print("Список всех каталогов: " + ", ".join(all_catalogs), end=".")
-    
-list_of_all_catalogs()
+
+#Добавления рецепта в каталог
+def add_recipe():
+    required_catalog = input("Введите каталог, в который вы хотите записать рецепт: ")
+
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    catalogs_path = os.path.join(current_dir, "Catalogs")
+    file_path = os.path.join(catalogs_path, f"{required_catalog}.txt")
+    files = os.listdir(catalogs_path)
+
+    file_found = False
+
+    all_catalogs = [
+        filename[:-4]
+        for filename in files
+        if filename.endswith(".txt")
+    ]
+
+    for catalog in all_catalogs:
+        if catalog == required_catalog:
+            file_found = True
+            break
+        
+    if file_found == True:
+        recipe_title = input("Введите название для рецепта: ")
+        ingredients = input("Введите ингредиенты (через запятую): ")
+        manual = input("Введите инструкцию приготовления: ")
+
+        catalog = open(file_path, "a", encoding="utf-8")
+        catalog.write(f"Название: {recipe_title}\n")
+        catalog.write(f"Ингредиенты: {ingredients}\n")
+        catalog.write(f"Инструкция: {manual}\n")
+        catalog.write("-" * 10 + "\n") #Разделитель между рецептами
+
+        print("Рецепт успешно записан!")
+    else:
+        print(f"К сожалению, каталог с названием «{required_catalog}» не был найден.")
+
+add_recipe()
