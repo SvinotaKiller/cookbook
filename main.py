@@ -108,10 +108,18 @@ def add_recipe():
         catalog.write(f"Ингредиенты: {ingredients}\n")
         catalog.write(f"Инструкция: {manual}\n")
         catalog.write("-" * 10 + "\n") #Разделитель между рецептами
+        catalog.close()
+
+        catalog = open(file_path, "r+", encoding="utf-8")
+        first_line = catalog.readline().strip()
+        recipe_count = int(first_line)
+        recipe_count += 1
+        catalog.seek(0)
+        catalog.write(str(recipe_count) + "\n")
+        catalog.close()
 
         print("Рецепт успешно записан!")
     else:
         print(f"К сожалению, каталог с названием «{required_catalog}» не был найден.")
 
-create_catalog()
 add_recipe()
