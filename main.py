@@ -139,4 +139,31 @@ def print_all_recipes_in_catalog():
     print(content)
     catalog.close()
 
-print_all_recipes_in_catalog()
+#Поиск рецепта по его наименованию
+def find_recipe():
+    need_recipe = input("Введите название рецепта для его поиска: ")
+
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    catalogs_path = os.path.join(current_dir, "Catalogs")
+
+    recipe_found = False
+
+    for filename in os.listdir(catalogs_path):
+        filepath = os.path.join(catalogs_path, filename)
+
+        catalog = open(filepath, "r", encoding="utf-8")
+
+        for line in catalog:
+            if line.startswith("Название:") and need_recipe.lower() in line.lower():
+                catalog_name = filename[:-4]
+                print(f"Рецепт найден в каталоге: {catalog_name}")
+                recipe_found = True
+                break 
+
+        catalog.close()
+
+    if recipe_found == False:
+        print(f"Рецепт с названием '{need_recipe}' не найден ни в одном каталоге.")
+
+add_recipe()
+find_recipe()
