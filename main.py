@@ -165,5 +165,57 @@ def find_recipe():
     if recipe_found == False:
         print(f"Рецепт с названием '{need_recipe}' не найден ни в одном каталоге.")
 
-add_recipe()
-find_recipe()
+#Удаление рецепта
+def delete_recipe():
+    catalog_name = input("Введите название каталога, из которого нужно удалить рецепт: ")
+    recipe_to_delete = input("Введите название рецепта, который нужно удалить: ")
+
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    catalogs_path = os.path.join(current_dir, "Catalogs")
+    filepath = os.path.join(catalogs_path, f"{catalog_name}.txt")
+
+    catalog = open(filepath, "r", encoding="utf-8")
+    content = catalog.read()
+    catalog.close()
+
+    recipes = content.split("-" * 20 + "\n")
+
+    updated_recipes = []
+    recipe_deleted = False
+
+    for recipe in recipes:
+        if recipe.strip():
+            if "Название:" in recipe:
+                recipe_name = recipe.split("Название:")[1].split("\n")[0].strip()
+                
+                if recipe_name.lower() == recipe_to_delete.lower():
+                    print(f"Рецепт «{recipe_to_delete}» удален из каталога «{catalog_name}».")
+                    recipe_deleted = True
+                    continue
+
+            updated_recipes.append(recipe + "-" * 20 + "\n")
+
+    if not recipe_deleted:
+        print(f"Рецепт с названием «{recipe_to_delete}» не найден в каталоге «{catalog_name}».")
+        return
+
+    catalog = open(filepath, "w", encoding="utf-8")
+
+    #Перезапись кол-во рецептов
+    first_line = f"Кол-во рецептов в каталоге: {len(updated_recipes) - 1}\n"
+    catalog.write(first_line)
+
+    #Запись даты
+    second_line = f"Дата создания: 06.04.2025\n"
+    catalog.write(second_line)
+
+    catalog.write("-" * 20 + "\n")
+
+    #Запись всего остального
+    for recipe in updated_recipes[1:]:
+        catalog.write(recipe)
+
+    catalog.close()
+
+delete_recipe()
+print_all_recipes_in_catalog()
