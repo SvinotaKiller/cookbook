@@ -16,7 +16,7 @@ def create_catalog():
         if not check_file_in_Catalogs(title):
             #Нахождение нынешней даты
             now = datetime.datetime.now()
-            date_string = now.strftime("%d.%m.%Y\n")
+            date_string = now.strftime("%d.%m.%Y")
 
             #Определяет где находится main.py; находит путь к папке Catalogs; создает полный путь к файлу из папки Catalogs
             current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -25,7 +25,7 @@ def create_catalog():
 
             #Создание файла, запись количества рецептов в нём, запись даты создания
             file = open(filepath, "w", encoding="utf-8")
-            file.write(f"0\n{date_string}")
+            file.write(f"Кол-во рецептов в каталоге: 0\nДата создания: {date_string}\n{"-" * 20 + "\n"}")
             file.close()
 
             print(f"Каталог с названием «{title}» успешно создан!")
@@ -107,19 +107,24 @@ def add_recipe():
         catalog.write(f"Название: {recipe_title}\n")
         catalog.write(f"Ингредиенты: {ingredients}\n")
         catalog.write(f"Инструкция: {manual}\n")
-        catalog.write("-" * 10 + "\n") #Разделитель между рецептами
+        catalog.write("-" * 20 + "\n") #Разделитель между рецептами
         catalog.close()
 
         catalog = open(file_path, "r+", encoding="utf-8")
         first_line = catalog.readline().strip()
-        recipe_count = int(first_line)
+
+        number_string = first_line.replace("Кол-во рецептов в каталоге:", "").strip() #Удаляет текст и пробелы
+
+        recipe_count = int(number_string)
         recipe_count += 1
         catalog.seek(0)
-        catalog.write(str(recipe_count) + "\n")
+        catalog.write(f"Кол-во рецептов в каталоге: {recipe_count}\n") #Перезаписывает строчку с новым числом
+
         catalog.close()
 
         print("Рецепт успешно записан!")
     else:
         print(f"К сожалению, каталог с названием «{required_catalog}» не был найден.")
 
+create_catalog()
 add_recipe()
