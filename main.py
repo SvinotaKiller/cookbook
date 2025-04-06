@@ -119,12 +119,24 @@ def add_recipe():
         recipe_count += 1
         catalog.seek(0)
         catalog.write(f"Кол-во рецептов в каталоге: {recipe_count}\n") #Перезаписывает строчку с новым числом
-
         catalog.close()
 
         print("Рецепт успешно записан!")
     else:
         print(f"К сожалению, каталог с названием «{required_catalog}» не был найден.")
 
-create_catalog()
-add_recipe()
+#Вывод на экран всех рецептов в выбранном каталоге
+def print_all_recipes_in_catalog():
+    catalog_name = input("Введите название каталога, рецепты которого хотите посмотреть: ")
+
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    catalogs_path = os.path.join(current_dir, "Catalogs")
+    filepath = os.path.join(catalogs_path, f"{catalog_name}.txt")
+
+    catalog = open(filepath, "r", encoding="utf-8")
+    content = catalog.read()
+    print("-" * 20)
+    print(content)
+    catalog.close()
+
+print_all_recipes_in_catalog()
