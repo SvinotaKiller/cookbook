@@ -217,5 +217,92 @@ def delete_recipe():
 
     catalog.close()
 
-delete_recipe()
-print_all_recipes_in_catalog()
+#Редактирование рецепта
+def edit_recipe():
+    catalog_name = input("Введите название каталога, в котором находится рецепт: ")
+    recipe_to_edit = input("Введите название рецепта, который нужно отредактировать: ")
+
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    catalogs_path = os.path.join(current_dir, "Catalogs")
+    filepath = os.path.join(catalogs_path, f"{catalog_name}.txt")
+
+    if not os.path.exists(filepath):
+        print(f"Каталог '{catalog_name}' не найден.")
+        return
+
+    catalog = open(filepath, "r", encoding="utf-8")
+    lines = catalog.readlines()
+    catalog.close()
+
+    recipe_edited = False
+    updated_recipes = []
+
+    #Сохраняет первые две строки
+    updated_recipes.append(lines[0])
+    updated_recipes.append(lines[1])
+
+    i = 2
+
+    while i < len(lines):
+        if lines[i].strip() == "--------------------":
+            updated_recipes.append(lines[i])
+            i += 1
+            continue
+
+        if "Название:" in lines[i]:
+            recipe_name = lines[i].split("Название:")[1].strip()
+
+            if recipe_name.lower() == recipe_to_edit.lower():
+                print(f"Редактирование рецепта «{recipe_to_edit}»:")
+
+                new_name = input("Введите новое название рецепта (или нажмите Enter, чтобы оставить прежним): ")
+                new_ingredients = input("Введите новые ингредиенты (или нажмите Enter, чтобы оставить прежним): ")
+                new_instructions = input("Введите новые инструкции (или нажмите Enter, чтобы оставить прежним): ")
+
+                #Получает старые значения из файла
+                old_ingredients = ""
+                old_instructions = ""
+
+                if i + 1 < len(lines) and "Ингредиенты:" in lines[i+1]:
+                    old_ingredients = lines[i+1].split("Ингредиенты:")[1].strip()
+                if i + 2 < len(lines) and "Инструкция:" in lines[i+2]:
+                    old_instructions = lines[i+2].split("Инструкция:")[1].strip()
+
+                #Сохраняет новые или старые значения
+                name = new_name if new_name else recipe_name
+                ingredients = new_ingredients if new_ingredients else old_ingredients
+                instructions = new_instructions if new_instructions else old_instructions
+
+                #Формирует отредактированный рецепт
+                edited_recipe = f"Название: {name}\nИнгредиенты: {ingredients}\nИнструкция: {instructions}\n"
+                updated_recipes.append(edited_recipe)
+                recipe_edited = True
+
+                i += 3
+                continue
+
+        #Сохраняет остальные строки
+        updated_recipes.append(lines[i])
+        i += 1
+
+    if not recipe_edited:
+        print(f"Рецепт с названием «{recipe_to_edit}» не найден в каталоге '{catalog_name}'.")
+
+    catalog = open(filepath, "w", encoding="utf-8")
+
+    #Считает кол-во рецептов
+    recipe_count = 0
+    for line in updated_recipes:
+        if "Название:" in line:
+            recipe_count += 1
+
+    catalog.write(f"Кол-во рецептов в каталоге: {recipe_count}\n")
+    catalog.write(f"Дата создания: 06.04.2025\n")
+
+    #Записывает рецепты
+    for line in updated_recipes[2:]:
+        catalog.write(line)
+
+    catalog.close()
+
+edit_recipe()
