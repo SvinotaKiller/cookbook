@@ -74,7 +74,7 @@ def list_of_all_catalogs():
         if filename.endswith(".txt")
     ]
 
-    print("Список всех каталогов: " + ", ".join(all_catalogs), end=".")
+    print("Список всех каталогов: " + ", ".join(all_catalogs), end=".\n")
 
 #Добавления рецепта в каталог
 def add_recipe():
@@ -163,7 +163,7 @@ def find_recipe():
         catalog.close()
 
     if recipe_found == False:
-        print(f"Рецепт с названием '{need_recipe}' не найден ни в одном каталоге.")
+        print(f"Рецепт с названием «{need_recipe}» не найден ни в одном каталоге.")
 
 #Удаление рецепта
 def delete_recipe():
@@ -227,7 +227,7 @@ def edit_recipe():
     filepath = os.path.join(catalogs_path, f"{catalog_name}.txt")
 
     if not os.path.exists(filepath):
-        print(f"Каталог '{catalog_name}' не найден.")
+        print(f"Каталог «{catalog_name}» не найден.")
         return
 
     catalog = open(filepath, "r", encoding="utf-8")
@@ -278,6 +278,8 @@ def edit_recipe():
                 updated_recipes.append(edited_recipe)
                 recipe_edited = True
 
+                print("Рецепт успешно отредактирован!")
+
                 i += 3
                 continue
 
@@ -285,8 +287,8 @@ def edit_recipe():
         updated_recipes.append(lines[i])
         i += 1
 
-    if not recipe_edited:
-        print(f"Рецепт с названием «{recipe_to_edit}» не найден в каталоге '{catalog_name}'.")
+    if recipe_edited == False:
+        print(f"Рецепт с названием «{recipe_to_edit}» не найден в каталоге «{catalog_name}».")
 
     catalog = open(filepath, "w", encoding="utf-8")
 
@@ -305,4 +307,57 @@ def edit_recipe():
 
     catalog.close()
 
-edit_recipe()
+#Связывание всех функций в одно приложение
+print("┌────────────────────────────────────────────────────────┐")
+print("| Консольное приложение для хранения кулинарных рецептов |")
+print("└────────────────────────────────────────────────────────┘")
+print("Для просмотра команд введите \"help\".")
+
+exit = False
+
+while exit != True:
+    action = input("> ")
+
+    if action == "help":
+        print("(1) create - Создание каталога, в который вы можете записать свои рецепты.")
+        print("(2) remove - Удаление выбранного вами каталога.")
+        print("(3)  list  - Вывод на экран всех существующих каталогов.")
+        print("(4)  add   - Добавление вашего рецепта в каталог.")
+        print("(5) delete - Удаление выбранного вами рецепта из каталога.")
+        print("(6)  read  - Чтение рецептов в выбранном каталоге.")
+        print("(7)  find  - Нахождение каталога, в котором находится рецепт.")
+        print("(8)  edit  - Редактирование рецепта из каталога.")
+        print("(9)  exit  - Завершение работы приложения.")
+        print("(10) help  - Помощь с командами.")
+
+    elif action == "create":
+        create_catalog()
+
+    elif action == "remove":
+        remove_catalog()
+
+    elif action == "list":
+        list_of_all_catalogs()
+    
+    elif action == "add":
+        add_recipe()
+
+    elif action == "delete":
+        delete_recipe()
+
+    elif action == "read":
+        print_all_recipes_in_catalog()
+
+    elif action == "find":
+        find_recipe()
+
+    elif action == "edit":
+        edit_recipe()
+
+    elif action == "exit":
+        print("Приложение завершило свою работу.")
+        exit = True
+        break
+
+    else:
+        print("Ошибка. Данной команды не существует.")
